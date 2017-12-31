@@ -22,7 +22,9 @@ It will also accept a second and third argument. These are to specify: 1) An add
 	- `/path/to/cf-update.sh config.sh update-my-dns-server.sh secondary-server-address`
 
 Of course, I'd recommend using a cronjob to run this script automatically at set intervals; Once every minute should be fine.
-Please set the hostnameaddr variable in your config file to a record that is NOT proxied. That is the address checked against your current server address. This is important!
+
+Please set the hostnameaddr variable in your config file to a record that is NOT proxied.
+That is the address checked against your current server address. This is IMPORTANT!
 
 ## Contact
 
