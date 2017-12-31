@@ -7,9 +7,16 @@ It will also accept a second and third argument. These are to specify 1) An addi
 
 A few examples of usage are:
 
-/path/to/cf-update.sh config.sh #In this command, the config file is assumed to be in the same directory as the script
-/path/to/cf-update.sh /path/to/config.sh #In this command, the config file location is specified
-/path/to/cf-update.sh config.sh update-my-dns-server.sh #Custom script specified. Please note that the variables $updatedir (cf-update.sh location) $oldip and $newip will be passed
-/path/to/cf-update.sh config.sh update-my-dns-server.sh secondary-server-address #Custom script and argument provided. Please note that the argument is passed normally as ${1}
+#In this command, the config file is assumed to be in the same directory as the script
+/path/to/cf-update.sh config.sh
+
+#In this command, the config file location is specified
+/path/to/cf-update.sh /path/to/config.sh
+
+#Custom script specified. Please note that the variables $updatedir (cf-update.sh location) $oldip and $newip will be passed
+/path/to/cf-update.sh config.sh update-my-dns-server.sh
+
+#Custom script and argument provided. Please note that the argument is passed normally as ${1}
+/path/to/cf-update.sh config.sh update-my-dns-server.sh secondary-server-address
 
 For assistance with the use or operation of this utility, you may email me at contact@machineitservices.com. Please no spam or soliciting.
