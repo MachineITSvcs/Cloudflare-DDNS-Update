@@ -9,17 +9,17 @@ It will also accept a second and third argument. These are to specify: 1) An add
 
 ## Usage
 
-	- In this command, the config file is assumed to be in the same directory as the script.
-		- `/path/to/cf-update.sh config.sh`
+- In this command, the config file is assumed to be in the same directory as the script.
+	- `/path/to/cf-update.sh config.sh`
 
-	- In this command, the config file location is specified.
-		- `/path/to/cf-update.sh /path/to/config.sh`
+- In this command, the config file location is specified.
+	- `/path/to/cf-update.sh /path/to/config.sh`
 
-	- Custom script specified. Please note that the variables $updatedir (cf-update.sh location) $oldip and $newip will be passed.
-		- `/path/to/cf-update.sh config.sh update-my-dns-server.sh`
+- Custom script specified. Please note that the variables $updatedir (cf-update.sh location) $oldip and $newip will be passed.
+	- `/path/to/cf-update.sh config.sh update-my-dns-server.sh`
 
-	- Custom script and argument provided. Please note that the argument is passed normally as `${1}` within your additional script.
-		- `/path/to/cf-update.sh config.sh update-my-dns-server.sh secondary-server-address`
+- Custom script and argument provided. Please note that the argument is passed normally as `${1}` within your additional script.
+	- `/path/to/cf-update.sh config.sh update-my-dns-server.sh secondary-server-address`
 
 Of course, I'd recommend using a cronjob to run this script automatically at set intervals; Once every minute should be fine.
 Please set the hostnameaddr variable in your config file to a record that is NOT proxied. That is the address checked against your current server address. This is important!
