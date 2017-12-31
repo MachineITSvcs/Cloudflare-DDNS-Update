@@ -29,7 +29,7 @@ That is the address checked against your current server address. This is IMPORTA
 
 ## Contact
 
-For assistance with the use or operation of this utility, you may email me at contact@machineitservices.com. Please no spam or soliciting.
+For assistance with the use or operation of this utility, you may email me at contact@machineitservices.com. Please no spam or solicitation.
 
 ## Donate
 
