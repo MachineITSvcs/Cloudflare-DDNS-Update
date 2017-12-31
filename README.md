@@ -30,3 +30,7 @@ That is the address checked against your current server address. This is IMPORTA
 ## Contact
 
 For assistance with the use or operation of this utility, you may email me at contact@machineitservices.com. Please no spam or soliciting.
+
+## Donate
+
+Donations are definitely welcome to encourage future developments like this one. You may visit https://www.machineitservices.com/donate/ if you would like to contribute. Thank you.
