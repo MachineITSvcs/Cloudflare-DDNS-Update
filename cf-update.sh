@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 updatedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ "${1}" != "" ]; then
