@@ -1,4 +1,4 @@
-# <a href="https://github.com/MachineITSvcs/Cloudflare-DDNS-Update" target="_blank">Cloudflare DDNS Update</a>
+# <a href="https://github.com/MachineITSvcs/Cloudflare-DDNS-Update" target="_blank">Cloudflare-DDNS-Update</a>
 
 ## Introduction
 
