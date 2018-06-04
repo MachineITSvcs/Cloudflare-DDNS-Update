@@ -40,7 +40,7 @@ fi
 
 pushd ${updatedir} > /dev/null 2>&1
 
-export newip=$(wget http://ipecho.net/plain -O - -q ; echo)
+export newip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
 if [[ "${setip}" == *"connection timed out"* ]] || [ "${newip}" == "" ] || [ "${setip}" == "" ]; then
     echo Obtaining Addresses Failed. Now Exiting...
