@@ -40,7 +40,7 @@ fi
 
 pushd ${updatedir} > /dev/null 2>&1
 
-export newip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+export newip=$(dig @8.8.8.8 -t txt o-o.myaddr.l.google.com | grep "client-subnet" | grep -o "\([0-9]\{1,3\}\.\)\{3\}\([0-9]\{1,3\}\)")
 
 if [[ "${setip}" == *"connection timed out"* ]] || [ "${newip}" == "" ] || [ "${setip}" == "" ]; then
     echo Obtaining Addresses Failed. Now Exiting...
