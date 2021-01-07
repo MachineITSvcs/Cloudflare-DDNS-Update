@@ -33,44 +33,53 @@ else
 fi
 
 if [ "${force}" == "on" ]; then
-	setip=0.0.0.0
+	setip4=0.0.0.0
+	setip6=::
 else
-	setip=$(dig +short ${hostnameaddr})
+	setip4=$(dig +short a ${hostnameaddr})
+	setip6=$(dig +short aaaa ${hostnameaddr})
 fi
 
 pushd ${updatedir} > /dev/null 2>&1
 
-export newip=$(curl ipv4bot.whatismyipaddress.com)
+export newip4=$(curl ipv4bot.whatismyipaddress.com)
+export newip6=$(curl ipv6bot.whatismyipaddress.com)
 
-if [[ "${setip}" == *"connection timed out"* ]] || [ "${newip}" == "" ] || [ "${setip}" == "" ]; then
+if $([[ "${setip4}" == *"connection timed out"* ]] || [ "${newip4}" == "" ] || [ "${setip4}" == "" ] || $(unset newip4 && echo false)) && \
+	$([[ "${setip6}" == *"connection timed out"* ]] || [ "${newip6}" == "" ] || [ "${setip6}" == "" ] || $(unset newip6 && echo false)); then
     echo Obtaining Addresses Failed. Now Exiting...
     exit
 else
-	if [ "${setip}" != "${newip}" ]; then
-	
-	oldiptxt=old_ip.txt
-	newiptxt=new_ip.txt
+	new_ips="ip4 ip6"
+	for i in ${new_ips[@]}; do
 
-	if [ -f ${updatedir}/${newiptxt} ]; then
-        	mv ${updatedir}/${newiptxt} ${updatedir}/${oldiptxt}
-	elif [ ! -f ${updatedir}/${newiptxt} ]; then
-        	if [ "${setip}" != "" ]; then
-                	echo ${setip}> ${updatedir}/${oldiptxt}
-        	else
-                	echo ERROR! Unable To Obtain Live Hostname IP Address. Exiting...
-                	exit
-        	fi
+		if [ "$(new_ip="new${i}"; newip=$(eval echo '${'$new_ip'}'); echo $newip;)" != "" ] && \
+			[ "$(set_ip="set${i}"; setip=$(eval echo '${'$set_ip'}'); echo $setip;)" != "$newip" ]; then
+
+		if [ "${i}" == "ip4" ]; then
+			rec_type=A
+		elif [ "${i}" == "ip6" ]; then
+			rec_type=AAAA
+		fi
+	
+	if [ -f ${updatedir}/new_${i}.txt ]; then
+        	mv ${updatedir}/new_${i}.txt ${updatedir}/old_${i}.txt
+	elif [ "$(eval echo '${'$set_ip'}')" != "" ]; then
+		echo ${setip}> ${updatedir}/old_${i}.txt
+	else
+		echo ERROR! Unable To Obtain Live Hostname IP Address. Exiting...
+		exit
 	fi
 
-	ip_file=${updatedir}/${oldiptxt}
-	export oldip=$(cat ${updatedir}/${oldiptxt})
-	echo ${newip}> ${updatedir}/${newiptxt}
+	ip_file=${updatedir}/old_${i}.txt
+	export oldip=$(cat ${updatedir}/old_${i}.txt)
+	echo ${newip}> ${updatedir}/new_${i}.txt
 
         echo IP Discrepancy Detected
         echo Saved IP: ${oldip}
         echo Live IP: ${setip}
         echo Current IP: ${newip}
-	echo DNS A Record Updates Required
+	echo DNS ${rec_type} Record Updates Required
 	echo Updating Cloudflare DNS Records
 	a=1
 while [ $a -le ${custom_records_num} ]; do
@@ -117,12 +126,12 @@ while [ $a -le ${custom_records_num} ]; do
 						proxy_check="custom${a}_proxied";
 						proxied=${!proxy_check}
 						if [ "$proxied" == "no" ]; then
-						update=$(curl -s -X PUT https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" --data "{\"type\":\"A\",\"name\":\"${h}${q}${zones[${g}]}\",\"content\":\"${newip}\",\"proxied\":false}")
+						update=$(curl -s -X PUT https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" --data "{\"type\":\"${rec_type}\",\"name\":\"${h}${q}${zones[${g}]}\",\"content\":\"${newip}\",\"proxied\":false}")
 
 						elif [ "$proxied" == "yes" ]; then
-						update=$(curl -s -X PUT https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" --data "{\"type\":\"A\",\"name\":\"${h}${q}${zones[${g}]}\",\"content\":\"${newip}\",\"proxied\":true}")
+						update=$(curl -s -X PUT https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" --data "{\"type\":\"${rec_type}\",\"name\":\"${h}${q}${zones[${g}]}\",\"content\":\"${newip}\",\"proxied\":true}")
 						else echo Proxy Value Not Defined in Custom $a; echo Attempting to Update Record Without Proxy Definition in Request
-						update=$(curl -s -X PUT https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" --data "{\"type\":\"A\",\"name\":\"${h}${q}${zones[${g}]}\",\"content\":\"$newip\"}")
+						update=$(curl -s -X PUT https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records/$record_identifier -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" --data "{\"type\":\"${rec_type}\",\"name\":\"${h}${q}${zones[${g}]}\",\"content\":\"$newip\"}")
 						fi
 						if [[ $update == *"\"success\":false"* ]]; then
 							message="API UPDATE FAILED FOR: \"${h}${q}${zones[${g}]}\" DUMPING RESULTS:\n$update"
@@ -154,7 +163,8 @@ echo "$newip" > $ip_file
         	fi
 	fi
 	
-	else	
+	else
 		exit
 	fi
+done
 fi
