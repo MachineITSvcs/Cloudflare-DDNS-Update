@@ -42,37 +42,42 @@ fi
 
 pushd ${updatedir} > /dev/null 2>&1
 
-export newip4=$(curl ipv4bot.whatismyipaddress.com)
-export newip6=$(curl ipv6bot.whatismyipaddress.com)
+export newip4=$(curl -4 -s myipv4.machineitservices.com)
+export newip6=$(curl -6 -s myipv6.machineitservices.com)
 
 if $([[ "${setip4}" == *"connection timed out"* ]] || [ "${newip4}" == "" ] || [ "${setip4}" == "" ] || $(unset newip4 && echo false)) && \
 	$([[ "${setip6}" == *"connection timed out"* ]] || [ "${newip6}" == "" ] || [ "${setip6}" == "" ] || $(unset newip6 && echo false)); then
     echo Obtaining Addresses Failed. Now Exiting...
     exit
 else
+
 	new_ips="ip4 ip6"
 	for i in ${new_ips[@]}; do
+		
+		setip=$(set_ip="set${i}"; setip=$(eval echo '${'$set_ip'}'); echo $setip;);
+		newip=$(new_ip="new${i}"; newip=$(eval echo '${'$new_ip'}'); echo $newip;);
 
-		if [ "$(new_ip="new${i}"; newip=$(eval echo '${'$new_ip'}'); echo $newip;)" != "" ] && \
-			[ "$(set_ip="set${i}"; setip=$(eval echo '${'$set_ip'}'); echo $setip;)" != "$newip" ]; then
+		if [ "$newip" != "" ] && \
+			[ "$setip" != "$newip" ]; then
 
 		if [ "${i}" == "ip4" ]; then
-			rec_type=A
+			echo Checking IPv4 Address
+			rec_type="A"
 		elif [ "${i}" == "ip6" ]; then
-			rec_type=AAAA
+			echo Checking IPv6 Address
+			rec_type="AAAA"
 		fi
 	
 	if [ -f ${updatedir}/new_${i}.txt ]; then
         	mv ${updatedir}/new_${i}.txt ${updatedir}/old_${i}.txt
-	elif [ "$(eval echo '${'$set_ip'}')" != "" ]; then
+	elif [ "$setip" != "" ]; then
 		echo ${setip}> ${updatedir}/old_${i}.txt
 	else
-		echo ERROR! Unable To Obtain Live Hostname IP Address. Exiting...
-		exit
+		echo ERROR! Unable To Obtain Old Hostname IP Address
 	fi
 
 	ip_file=${updatedir}/old_${i}.txt
-	export oldip=$(cat ${updatedir}/old_${i}.txt)
+	if [ -f $ip_file ]; then export oldip=$(cat ${updatedir}/old_${i}.txt); fi
 	echo ${newip}> ${updatedir}/new_${i}.txt
 
         echo IP Discrepancy Detected
@@ -96,7 +101,7 @@ while [ $a -le ${custom_records_num} ]; do
 				load_record="custom${a}_records[$c]";
 				h=${!load_record};
 				if [ "$h" != "" ]; then q="."; else q=""; fi
-				declare ${zones[${g}]//.}_file[${c}]=${ids_dir}/cf-${h}${q}${zones[${g}]}.ids;
+				declare ${zones[${g}]//.}_file[${c}]=${ids_dir}/cf-$i-${h}${q}${zones[${g}]}.ids;
 				id_file=$(eval "echo \"\${zones[${g}]//.}_file[${c}]\"");
 				echo ""
 				echo Updating Record for ${h}${q}${zones[${g}]}
@@ -110,13 +115,13 @@ while [ $a -le ${custom_records_num} ]; do
 							u="user${s}_creds[0]";
 							p="user${s}_creds[1]";
 						if [ -f ${!id_file} ] && [ $(wc -l ${!id_file} | cut -d " " -f 1) == 2 ]; then
-							echo Reading Identifiers from Saved File: cf-${h}${q}${zones[${g}]}.ids
+							echo Reading Identifiers from Saved File: cf-$i-${h}${q}${zones[${g}]}.ids
 							zone_identifier=$(head -1 ${!id_file})
 							record_identifier=$(tail -1 ${!id_file})
 						else
 							echo Using API to GET Identifiers
 							zone_identifier=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=${zones[${g}]}" -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" | grep -Po '(?<="id":")[^"]*' | head -1 )
-							record_identifier=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records?name=${h}${q}${zones[${g}]}" -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json"  | grep -Po '(?<="id":")[^"]*' | head -1 )
+							record_identifier=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$zone_identifier/dns_records?name=${h}${q}${zones[${g}]}&type=${rec_type}" -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json"  | grep -Po '(?<="id":")[^"]*' | head -1 )
 							echo Writing Identifiers to Save File: cf-${h}${q}${zones[${g}]}.ids
 							echo "$zone_identifier" > ${!id_file}
 							echo "$record_identifier" >> ${!id_file}
@@ -162,9 +167,6 @@ echo "$newip" > $ip_file
                 	echo Secondary Script Specified But File Not Found... Continuing...
         	fi
 	fi
-	
-	else
-		exit
 	fi
 done
 fi
