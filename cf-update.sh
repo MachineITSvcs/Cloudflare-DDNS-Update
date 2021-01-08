@@ -30,7 +30,7 @@ if [ "${ids_dir}" != "" ]; then
 else
         echo IDS Storage Location Not Specified in Config File...
         echo Using Script Location Instead...
-	ids_dir=${updatedir}
+	ids_dir="${updatedir}"
 fi
 
 if [ "${force}" == "on" ]; then
