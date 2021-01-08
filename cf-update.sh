@@ -60,10 +60,10 @@ else
 
 		if [ "${newip}" != "" ] && [ "${setip}" != "${newip}" ]; then
 			if [ "${i}" == "ip4" ]; then
-				echo Checking IPv4 Address
+				echo -e "\nChecking IPv4 Address\n"
 				rec_type="A"
 			elif [ "${i}" == "ip6" ]; then
-				echo Checking IPv6 Address
+				echo -e "\necho Checking IPv6 Address\n"
 				rec_type="AAAA"
 			fi
 	
@@ -87,7 +87,7 @@ else
 	echo Updating Cloudflare DNS Records
 	a=1
 while [ ${a} -le ${custom_records_num} ]; do
-	echo "" && echo Loading Custom ${a}
+	echo -e "\nLoading Custom ${a}"
 	load_zone="custom${a}_zones[@]"
 	cur_zone="(${!load_zone})"
 	for b in $(eval echo '${!'${load_zone}'}'); do
@@ -102,8 +102,7 @@ while [ ${a} -le ${custom_records_num} ]; do
 				if [ "$h" != "" ]; then q="."; else q=""; fi
 				declare ${zones[${g}]//.}_file[${c}]=${ids_dir}/cf-${i}-${h}${q}${zones[${g}]}.ids
 				id_file=$(eval "echo \"\${zones[${g}]//.}_file[${c}]\"")
-				echo ""
-				echo Updating Record for ${h}${q}${zones[${g}]}
+				echo -e "\nUpdating Record for ${h}${q}${zones[${g}]}"
 				s=1
 				while [ ${s} -le ${user_creds_num} ]; do
 					load_creds="user${s}_credzone[@]"
