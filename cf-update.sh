@@ -63,7 +63,7 @@ else
 				echo -e "\nChecking IPv4 Address\n"
 				rec_type="A"
 			elif [ "${i}" == "ip6" ]; then
-				echo -e "\necho Checking IPv6 Address\n"
+				echo -e "\nChecking IPv6 Address\n"
 				rec_type="AAAA"
 			fi
 	
