@@ -1,6 +1,6 @@
 ############### START CONFIG ###############
 
-## Check IP Address of This Hostname. I recommend making one specifically for Cloudflare
+## Check IP Address of This Hostname. I recommend making one specifically for Cloudflare (Non-Proxied)
 hostnameaddr=cf.example.com
 
 ## Zones to update. Listed in array surrounded by paranthesis in the format: (example1.com example2.com ...) Remember array values start at 0
