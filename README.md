@@ -26,6 +26,7 @@ Of course, I'd recommend using a cronjob to run this script automatically at set
 
 Please set the `hostnameaddr` variable in your config file to a record that is NOT proxied, and INCLUDE it in your list of records to update.
 Otherwise it will always run, as it is the address checked against your current server address. This is IMPORTANT!
+
 NOTE: In the future, I may just use the API to retrieve each record's currently set address in Cloudflare to do away with this "non-proxied" record requirement.
 
 ## Contact
