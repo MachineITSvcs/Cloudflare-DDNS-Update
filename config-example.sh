@@ -1,48 +1,37 @@
 ############### START CONFIG ###############
 
-## Check IP Address of This Hostname. I recommend making one specifically for Cloudflare (Non-Proxied)
-hostnameaddr=cf.example.com
-
-## Zones to update. Listed in array surrounded by paranthesis in the format: (example1.com example2.com ...) Remember array values start at 0
+## Zones to update. Space-delimited list in the format: (example1.com example2.com ...) - Used as array (first value 0)
 zones=(example.com example1.com example2.com)
 
 ############# Credentials #############
 
-## First Set of Credentials listed in array in the format: (user@name.com zone_global_api_key)
+## First Set of Credentials in the format: (user@name.com zone_global_api_key)
 user1_creds=("user1@example.com" "user1APIkey")
-
-## Specify Zones that utilize the First Set of Credentials in array in the format: (0 1 ...)
+## Specify Zones that utilize the First Set of Credentials in the format: (0 1 ...) - (0 refers to first domain in zones, 1 refers to second, and so on)
 user1_credzone=(0 1)
 
-
-## Second Set of Credentials listed in array in the format: (user@name.com zone_global_api_key)
+## Second Set of Credentials in array in the format: (user@name.com zone_global_api_key)
 user2_creds=("user2@example2.com" "user2APIkey")
-
-## Specify Zones that utilize the Second Set of Credentials in array in the format: (0 1 ...)
+## Specify Zones that utilize the Second Set of Credentials in the format: (0 1 ...) - (0 refers to first domain in zones, 1 refers to second, and so on)
 user2_credzone=(2)
 
 ############## Records ##############
 
-## First Set of Records listed in array in the format: ("" cf mail ...) I recommend including "hostnameaddr" above
+## First Set of Records listed in the format: ("" cf mail ...) - ("" refers to domain without subdomain, i.e. "naked" domain record)
 custom1_records=(cf)
-
-## Specify Zones containing the aforementioned records to be updated in array in the format: (0 1 ...)
+## Specify Zones containing the aforementioned records to be updated in the format: (0 1 ...) - (0 refers to first domain in zones, 1 refers to second, and so on)
 custom1_zones=(0)
-
 ## Specify whether records updated will have proxy enabled or disabled. Use either "yes" or "no" without quotes
 custom1_proxied=no
 
-
-## Second Set of Records listed in array in the format: ("" ns1 ...)
+## Second Set of Records listed in the format: ("" ns1 ...) - ("" refers to domain without subdomain, i.e. "naked" domain record)
 custom2_records=("")
-
-## Specify Zones containing the aforementioned records to be updated in array in the format: (0 1 ...)
+## Specify Zones containing the aforementioned records to be updated in array in the format: (0 1 ...) - (0 refers to first domain in zones, 1 refers to second, and so on)
 custom2_zones=(0 1 2)
-
 ## Specify whether records updated will have proxy enabled or disabled. Use either "yes" or "no" without quotes
 custom2_proxied=yes
 
-# If you add custom variables above (i.e. user3... or custom3...), you will also have to change the values below.
+# If you add custom variables above (i.e. user3_... or custom3_...), you will also have to change the values below.
 
 ## Number of Sets of Credentials Above
 user_creds_num=2
