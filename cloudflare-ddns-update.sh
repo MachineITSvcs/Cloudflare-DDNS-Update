@@ -86,10 +86,9 @@ for i in ${new_ips[@]}; do
 										echo Reading Identifiers from Saved File: cf-${i}-${h}${q}${zones[${g}]}.ids
 										zone_identifier=$(head -1 ${!id_file})
 										record_identifier=$(tail -1 ${!id_file})
-									fi
-
-									if [ "${zone_identifier}" != "" ] && [ "${record_identifier}" != "" ]; then
-										current_ip="$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/${zone_identifier}/dns_records/${record_identifier}" -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" | grep -Po '(?<="content":")[^"]*' | head -1 )"
+										if [ "${zone_identifier}" != "" ] && [ "${record_identifier}" != "" ]; then
+											current_ip="$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/${zone_identifier}/dns_records/${record_identifier}" -H "X-Auth-Email: ${!u}" -H "X-Auth-Key: ${!p}" -H "Content-Type: application/json" | grep -Po '(?<="content":")[^"]*' | head -1 )"
+										fi
 									fi
 
 									if [ "${current_ip}" == "" ]; then
