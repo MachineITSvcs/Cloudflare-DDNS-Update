@@ -34,8 +34,8 @@ fi
 
 pushd "${updatedir}" > /dev/null 2>&1
 
-export newip4=$(curl -4 -s myipv4.machineitservices.com)
-export newip6=$(curl -6 -s myipv6.machineitservices.com)
+export newip4=$(curl -4 -s https://myipv4.machineitservices.com)
+export newip6=$(curl -6 -s https://myipv6.machineitservices.com)
 
 new_ips="ip4 ip6"
 for i in ${new_ips[@]}; do
