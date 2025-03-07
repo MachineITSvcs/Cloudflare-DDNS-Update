@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This was a project I began working on when I founded <a href="https://www.machineitservices.com/" target="_blank">Machine IT Services</a>, a web hosting, web development, and IT company based in Louisville, KY.
+This was a project I began working on when I founded <a href="https://www.machineitservices.com/" target="_blank">Machine IT Services</a>, a web hosting, web development, and IT consulting and services company.
 This script has the potential to update the DNS Records (A and AAAA) of a multitude of domains/zones on Cloudflare, while also providing flexibility by allowing the update of specific subdomains/records for each domain specified in the config file, compatible with both IPv4 and IPv6 addresses.
 You may refer to included config-example.sh for config file format. In order to run the script, just execute it with either the config file name (if in the same directory, i.e. config.sh) or the config file location (i.e. /your/config/directory/config.sh) as your first argument. You can specify numerous custom record sections, with each containing unique or different sets of subdomains/records for each zone specified. You can list the same zone more than once in separate records groups, setting the proxy option for each group as needed.
 It will also accept a second argument. This is to specify an additional script to run. Any additional arguments will be passed to the additional script. This is helpful in the situation that your server is also a DNS server or needs the IP address updated somewhere in it's own files or databases as it will include the $oldip4/6 and $newip4/6 variables, as well as the $updatedir/cloudflare-ddns-update.sh script location.
